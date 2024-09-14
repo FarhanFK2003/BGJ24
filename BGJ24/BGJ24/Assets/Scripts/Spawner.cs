@@ -21,7 +21,7 @@ public class Spawner : MonoBehaviour
             yield return new WaitForSeconds(spawnInterval);
 
             // Calculate the spawn position with the offset
-            Vector3 spawnPosition = transform.position + spawnOffset + new Vector3(Random.Range(-10,10),0, Random.Range(-10, 10));
+            Vector3 spawnPosition = transform.position + spawnOffset + new Vector3(Random.Range(-10,10), 0, Random.Range(-10, 10));
 
             // Instantiate the object at the calculated position
             if (objectToSpawn != null)

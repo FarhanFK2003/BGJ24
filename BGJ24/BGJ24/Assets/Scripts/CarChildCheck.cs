@@ -442,14 +442,126 @@
 //    }
 //}
 
+
+//Updated
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
+
+//public class CarChildCheck : MonoBehaviour
+//{
+//    public int maxCapacity = 4; // Maximum number of characters the car can hold
+//    private List<GameObject> charactersInCar = new List<GameObject>(); // List to store the characters added to the car
+
+//    // Check if the car is at full capacity
+//    public bool IsCarFull()
+//    {
+//        return charactersInCar.Count >= maxCapacity;
+//    }
+
+//    // Function to add a character to the car
+//    public void AddCharacter(GameObject character)
+//    {
+//        if (!IsCarFull())
+//        {
+//            charactersInCar.Add(character);
+//            Debug.Log("Character added to car. Current capacity: " + charactersInCar.Count);
+
+//            // Deactivate the character but keep it in the list for future use
+//            character.SetActive(false);
+//        }
+//        else
+//        {
+//            Debug.Log("Car is at full capacity. Cannot add more characters.");
+//        }
+//    }
+
+//    // Check if the car already contains a character
+//    public bool DoesCarContainCharacter(GameObject character)
+//    {
+//        return charactersInCar.Contains(character);
+//    }
+
+//    // Function to activate all characters and move them towards the rocket
+//    public void ActivateAndMoveCharactersTowardsRocket(GameObject rocket)
+//    {
+//        StartCoroutine(MoveCharactersTowardsRocket(rocket));
+//    }
+
+//    // Coroutine to move all characters towards the rocket
+//    private IEnumerator MoveCharactersTowardsRocket(GameObject rocket)
+//    {
+//        float moveSpeed = 2f; // Set a move speed
+
+//        // Iterate over a copy of the list to avoid modifying the list while iterating
+//        foreach (GameObject character in new List<GameObject>(charactersInCar))
+//        {
+//            if (character != null)
+//            {
+//                character.SetActive(true); // Reactivate the character
+
+//                // Unparent the character from the car
+//                character.transform.SetParent(null);
+
+//                // Move the character towards the rocket
+//                yield return StartCoroutine(MoveCharacterToRocket(character, rocket));
+//            }
+//        }
+//    }
+
+//    // Coroutine to move a character towards the rocket
+//    private IEnumerator MoveCharacterToRocket(GameObject character, GameObject rocket)
+//    {
+//        float moveSpeed = 2f; // Set a move speed
+
+//        // Get the Animator component from the character and set "isRun" to true
+//        Animator characterAnimator = character.GetComponent<Animator>();
+//        if (characterAnimator != null)
+//        {
+//            characterAnimator.enabled = true;
+//            characterAnimator.SetBool("isRun", true); // Start the running animation
+//        }
+
+//        while (Vector3.Distance(character.transform.position, rocket.transform.position) > 0.1f)
+//        {
+//            // Move the character towards the rocket
+//            character.transform.position = Vector3.MoveTowards(character.transform.position, rocket.transform.position, moveSpeed * Time.deltaTime);
+
+//            // Rotate the character to face the rocket
+//            Vector3 directionToRocket = rocket.transform.position - character.transform.position;
+//            directionToRocket.y = 0; // Keep the character upright (ignore vertical rotation)
+//            Quaternion targetRotation = Quaternion.LookRotation(directionToRocket);
+
+//            // Smoothly rotate the character towards the car
+//            character.transform.rotation = Quaternion.Slerp(character.transform.rotation, targetRotation, moveSpeed * Time.deltaTime * 2);
+
+//            yield return null;
+//        }
+
+//        Debug.Log(character.name + " reached the rocket and is being destroyed.");
+
+//        // Remove the character from the car's list and destroy it
+//        charactersInCar.Remove(character);
+//        Destroy(character); // Destroy the character after reaching the rocket
+//    }
+//}
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI; // For UI components
 
 public class CarChildCheck : MonoBehaviour
 {
     public int maxCapacity = 4; // Maximum number of characters the car can hold
     private List<GameObject> charactersInCar = new List<GameObject>(); // List to store the characters added to the car
+
+    public Text capacityText; // Reference to the UI Text component for displaying the car's capacity
+
+    void Start()
+    {
+        UpdateCapacityUI(); // Initialize the UI with the current capacity at the start
+    }
 
     // Check if the car is at full capacity
     public bool IsCarFull()
@@ -467,6 +579,9 @@ public class CarChildCheck : MonoBehaviour
 
             // Deactivate the character but keep it in the list for future use
             character.SetActive(false);
+
+            // Update the capacity UI
+            UpdateCapacityUI();
         }
         else
         {
@@ -541,6 +656,17 @@ public class CarChildCheck : MonoBehaviour
         // Remove the character from the car's list and destroy it
         charactersInCar.Remove(character);
         Destroy(character); // Destroy the character after reaching the rocket
+
+        // Update the capacity UI after a character is destroyed
+        UpdateCapacityUI();
+    }
+
+    // Function to update the UI Text with the current car capacity
+    private void UpdateCapacityUI()
+    {
+        if (capacityText != null)
+        {
+            capacityText.text = "CAP: " + charactersInCar.Count + "/" + maxCapacity;
+        }
     }
 }
-
