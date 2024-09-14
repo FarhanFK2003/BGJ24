@@ -2589,7 +2589,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1144274275
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6339,6 +6339,10 @@ PrefabInstance:
     - target: {fileID: 5679905131446780791, guid: adcbef1f6ac643941a611697ec8151b9, type: 3}
       propertyPath: m_Name
       value: MaleASpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 8270014371855944981, guid: adcbef1f6ac643941a611697ec8151b9, type: 3}
+      propertyPath: spawnInterval
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

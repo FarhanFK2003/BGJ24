@@ -516,6 +516,7 @@ public class CarChildCheck : MonoBehaviour
         Animator characterAnimator = character.GetComponent<Animator>();
         if (characterAnimator != null)
         {
+            characterAnimator.enabled = true;
             characterAnimator.SetBool("isRun", true); // Start the running animation
         }
 
@@ -523,6 +524,15 @@ public class CarChildCheck : MonoBehaviour
         {
             // Move the character towards the rocket
             character.transform.position = Vector3.MoveTowards(character.transform.position, rocket.transform.position, moveSpeed * Time.deltaTime);
+
+            // Rotate the character to face the rocket
+            Vector3 directionToRocket = rocket.transform.position - character.transform.position;
+            directionToRocket.y = 0; // Keep the character upright (ignore vertical rotation)
+            Quaternion targetRotation = Quaternion.LookRotation(directionToRocket);
+
+            // Smoothly rotate the character towards the car
+            character.transform.rotation = Quaternion.Slerp(character.transform.rotation, targetRotation, moveSpeed * Time.deltaTime * 2);
+
             yield return null;
         }
 

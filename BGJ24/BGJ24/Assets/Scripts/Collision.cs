@@ -103,15 +103,17 @@ public class Collision : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //Debug.Log(""+other.gameObject.layer+" "+ other.transform.position);
         if (other.gameObject.CompareTag("Player"))
         {
             // Check if the car has space and does not already contain this specific character
-            if (!carChildCheck.IsCarFull() && !carChildCheck.DoesCarContainCharacter(character))
+            if (!carChildCheck.IsCarFull() /*&& !carChildCheck.DoesCarContainCharacter(character)*/)
             {
                 Debug.Log("Car has space. Moving character towards car.");
                 isMovingTowardsCar = true;
                 animator.SetBool("isRun", true);
-                Destroy(outline.gameObject, 1.5f);
+                outline.SetActive(false);
+                //Destroy(outline.gameObject, 1.5f);
             }
             else
             {
@@ -129,23 +131,40 @@ public class Collision : MonoBehaviour
         // Move the character towards the car's position
         character.transform.position = Vector3.MoveTowards(character.transform.position, car.transform.position, step);
 
+        // Rotate the character to face the car
+        Vector3 directionToCar = car.transform.position - character.transform.position;
+        directionToCar.y = 0; // Keep the character upright (ignore vertical rotation)
+        Quaternion targetRotation = Quaternion.LookRotation(directionToCar);
+
+        // Smoothly rotate the character towards the car
+        character.transform.rotation = Quaternion.Slerp(character.transform.rotation, targetRotation, step * 2);
+
         // Check if the character has reached the car
         if (Vector3.Distance(character.transform.position, car.transform.position) < range)
         {
-            // Destroy the current parent of the character if it exists
-            if (character.transform.parent != null)
+            if (!carChildCheck.IsCarFull())
             {
-                Destroy(character.transform.parent.gameObject);
+                // Destroy the current parent of the character if it exists
+                if (character.transform.parent != null)
+                {
+                    Destroy(character.transform.parent.gameObject);
+                }
+
+                // Re-parent the character to the car
+                character.transform.SetParent(car.transform);
+
+                // Notify the car to add the character to its list
+                carChildCheck.AddCharacter(character);
+
+                // Stop moving the character
+                isMovingTowardsCar = false;
             }
-
-            // Re-parent the character to the car
-            character.transform.SetParent(car.transform);
-
-            // Notify the car to add the character to its list
-            carChildCheck.AddCharacter(character);
-
-            // Stop moving the character
-            isMovingTowardsCar = false;
+            else
+            {
+                isMovingTowardsCar = false;
+                animator.SetBool("isRun", false);
+                outline.SetActive(true);
+            }
         }
     }
 }
