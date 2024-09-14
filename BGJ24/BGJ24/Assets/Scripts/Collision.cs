@@ -82,7 +82,14 @@ public class Collision : MonoBehaviour
     void Start()
     {
         // Get the CarChildCheck script from the car
-        carChildCheck = car.GetComponent<CarChildCheck>();
+        //carChildCheck = car.GetComponent<CarChildCheck>();
+
+        car = GameObject.FindGameObjectWithTag("Player");
+        if (car != null)
+        {
+            // Get the CarChildCheck script from the car
+            carChildCheck = car.gameObject.GetComponent<CarChildCheck>();
+        }
     }
 
     // Update is called once per frame
@@ -125,6 +132,12 @@ public class Collision : MonoBehaviour
         // Check if the character has reached the car
         if (Vector3.Distance(character.transform.position, car.transform.position) < range)
         {
+            // Destroy the current parent of the character if it exists
+            if (character.transform.parent != null)
+            {
+                Destroy(character.transform.parent.gameObject);
+            }
+
             // Re-parent the character to the car
             character.transform.SetParent(car.transform);
 
