@@ -6,6 +6,7 @@ public class Timer : MonoBehaviour
 {
     public Text timerText; // Reference to the UI Text to display the countdown
     public float levelTime = 120f; // The total time for the level (in seconds)
+    public string levelName;
 
     private float timeRemaining;
     private bool timerRunning = false;
@@ -51,7 +52,7 @@ public class Timer : MonoBehaviour
     {
         Debug.Log("Time is up! Level ends.");
         // Add logic here to end the level, load the next scene, or trigger any event
-        SceneManager.LoadScene("EndLevel");
+        SceneManager.LoadScene(levelName);
     }
 
     // Optional function to stop the countdown early

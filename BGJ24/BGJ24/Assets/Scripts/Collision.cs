@@ -61,9 +61,6 @@
 //    }
 //}
 
-
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Collision : MonoBehaviour
@@ -74,6 +71,8 @@ public class Collision : MonoBehaviour
     public float moveSpeed = 2f; // Speed at which the character moves towards the car
     public float range = 0.1f; // Range at which the character attaches to the car
     public Animator animator;
+    public AudioSource audioSource;
+    public AudioClip clip;
 
     private bool isMovingTowardsCar = false;
     private CarChildCheck carChildCheck;
@@ -89,6 +88,11 @@ public class Collision : MonoBehaviour
         {
             // Get the CarChildCheck script from the car
             carChildCheck = car.gameObject.GetComponent<CarChildCheck>();
+        }
+
+        if(audioSource != null)
+        {
+            audioSource = gameObject.GetComponent<AudioSource>();
         }
     }
 
@@ -110,6 +114,7 @@ public class Collision : MonoBehaviour
             if (!carChildCheck.IsCarFull() /*&& !carChildCheck.DoesCarContainCharacter(character)*/)
             {
                 Debug.Log("Car has space. Moving character towards car.");
+                audioSource.PlayOneShot(clip);
                 isMovingTowardsCar = true;
                 animator.SetBool("isRun", true);
                 outline.SetActive(false);
