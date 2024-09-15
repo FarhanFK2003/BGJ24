@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
 {
@@ -50,6 +51,7 @@ public class Timer : MonoBehaviour
     {
         Debug.Log("Time is up! Level ends.");
         // Add logic here to end the level, load the next scene, or trigger any event
+        SceneManager.LoadScene("EndLevel");
     }
 
     // Optional function to stop the countdown early
